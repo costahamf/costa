@@ -281,35 +281,16 @@ textarea{resize:vertical}
 
 /* Dashboard page decor */
 .recruiter-dashboard-decor-1{width:180px;height:280px;top:0px;right:960px}
-.recruiter-dashboard-decor-2{width:120px;height:220px;bottom:250px;left:500px}
 
 /* City rates page decor */
-.recruiter-cityrates-decor-1{width:160px;height:260px;top:660px;left:20px}
 .recruiter-cityrates-decor-2{width:140px;height:200px;bottom:740px;right:1100px}
 
 /* FAQ page decor */
-.recruiter-faq-decor-1{width:240px;height:240px;top:20px;right:20px}
-.recruiter-faq-decor-2{width:180px;height:180px;bottom:20px;left:20px}
 
 /* Withdraw page decor */
-.recruiter-withdraw-decor-1{width:260px;height:260px;top:220px;left:20px}
 .recruiter-withdraw-decor-2{width:140px;height:200px;bottom:740px;right:1200px}
 
 /* Admin pages decor */
-.admin-stats-decor-1{width:280px;height:280px;top:20px;right:20px}
-.admin-stats-decor-2{width:220px;height:220px;bottom:20px;left:20px}
-.admin-recruiters-decor-1{width:260px;height:260px;top:20px;left:20px}
-.admin-recruiters-decor-2{width:200px;height:200px;bottom:20px;right:20px}
-.admin-couriers-decor-1{width:260px;height:260px;top:20px;right:20px}
-.admin-couriers-decor-2{width:200px;height:200px;bottom:20px;left:20px}
-.admin-cityrates-decor-1{width:260px;height:260px;top:20px;left:20px}
-.admin-cityrates-decor-2{width:200px;height:200px;bottom:20px;right:20px}
-.admin-news-decor-1{width:260px;height:260px;top:20px;right:20px}
-.admin-news-decor-2{width:200px;height:200px;bottom:20px;left:20px}
-.admin-settings-decor-1{width:260px;height:260px;top:20px;left:20px}
-.admin-settings-decor-2{width:200px;height:200px;bottom:20px;right:20px}
-.admin-verification-decor-1{width:260px;height:260px;top:20px;right:20px}
-.admin-verification-decor-2{width:200px;height:200px;bottom:20px;left:20px}
 
 /* Panel with decor */
 .panel{position:relative;z-index:1}
@@ -338,3 +319,30 @@ textarea{resize:vertical}
   .admin-decor-1,.admin-decor-2{display:none}
 }
 @media(max-width:900px){.landing-header nav a:not(.button){display:none}.hero-section,.split-card,.referral-box{grid-template-columns:1fr}.benefits-grid,.process-grid,.stats-grid,.charts-grid{grid-template-columns:1fr}.app-sidebar{transform:translateX(-105%);transition:.25s}.app-sidebar.open{transform:none}.sidebar-close{display:inline-flex}.sidebar-backdrop.open{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:15}.mobile-topbar{display:flex;position:sticky;top:0;z-index:12;background:#fff;padding:12px 16px;border-bottom:1px solid var(--line)}.app-content{margin-left:0;width:100%;padding:18px}.site-footer{display:grid;gap:10px}.copy-row{display:grid}.hero-copy h1{font-size:42px}}
+
+/* Refined recruiter/admin UI */
+.button,button.button{border-radius:40px;transition:background .25s ease,transform .25s ease,box-shadow .25s ease}
+.button:hover{background:#2a2113;transform:translateY(-2px) scale(1.02)}
+.button.small{border-radius:40px}
+.panel,.benefit-card,.process-card,.stat-card,.form-card,.referral-box{background:rgba(255,255,255,.92);border:1px solid rgba(234,223,202,.9);border-radius:28px;box-shadow:0 18px 48px rgba(45,35,10,.10);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.panel:hover,.benefit-card:hover,.process-card:hover,.stat-card:hover,.form-card:hover,.referral-box:hover{transform:translateY(-3px);box-shadow:0 24px 60px rgba(45,35,10,.15);border-color:#f3d75d}
+input,select,textarea{border-radius:18px;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--yellow);box-shadow:0 0 0 4px rgba(255,212,0,.22);background:#fffef8}
+.table-wrap{overflow-x:auto;border-radius:22px;box-shadow:0 12px 30px rgba(45,35,10,.08);background:#fff}
+.data-table th{background:#fff7d6;color:#3a2a0f;font-weight:900}
+.data-table tbody tr{transition:background .2s ease,transform .2s ease}
+.data-table tbody tr:nth-child(even){background:#fffaf0}
+.data-table tbody tr:hover{background:#fff2bf}
+.app-sidebar{background:#17120a;padding:26px 20px;box-shadow:12px 0 36px rgba(23,18,10,.18)}
+.sidebar-nav{gap:10px}
+.sidebar-nav a{padding:13px 14px;border-radius:18px}
+.sidebar-nav a:hover,.sidebar-nav a.active{background:linear-gradient(135deg,rgba(255,212,0,.26),rgba(255,212,0,.10));box-shadow:inset 4px 0 0 var(--yellow)}
+.sidebar-backdrop.open{backdrop-filter:blur(2px)}
+.notifications-sidebar{width:380px;max-width:92vw;box-shadow:-18px 0 60px rgba(23,18,10,.24);transition:transform .35s ease}
+.notifications-sidebar-overlay{background:rgba(23,18,10,.48);backdrop-filter:blur(2px)}
+.notifications-sidebar-body article{background:#fffaf0;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;transition:transform .2s ease,box-shadow .2s ease}
+.notifications-sidebar-body article:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(45,35,10,.12)}
+.notification-news-image,.news-image{max-width:200px;max-height:150px;object-fit:cover;border-radius:16px;margin:10px 0}
+.news-list article{border-radius:24px;box-shadow:0 12px 34px rgba(45,35,10,.10);transition:transform .2s ease,box-shadow .2s ease}
+.news-list article:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(45,35,10,.14)}
+@media(max-width:900px){.app-sidebar{transform:translateX(-105%);transition:transform .3s ease}.sidebar-backdrop.open{position:fixed;inset:0;background:rgba(23,18,10,.48);z-index:15;backdrop-filter:blur(2px)}}

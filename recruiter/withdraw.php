@@ -5,10 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { verify_csrf(); $amount = (float) st
 $stmt = $pdo->prepare('SELECT * FROM withdrawals WHERE recruiter_id = ? ORDER BY created_at DESC'); $stmt->execute(array(current_user_id())); $withdrawals = $stmt->fetchAll();
 $pageTitle='Выплаты'; $bodyClass='app-layout'; $activePage='withdraw'; $pageHeading='Выплаты'; require __DIR__ . '/../includes/header.php'; require __DIR__ . '/../includes/recruiter-sidebar.php';
 ?>
-<!-- Decorative 3D images -->
-<div class="recruiter-decor-1 recruiter-withdraw-decor-1" aria-hidden="true">
-    <img src="<?= e(asset_url('img/recruiter-withdraw-decor-1.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
-</div>
 <div class="recruiter-decor-2 recruiter-withdraw-decor-2" aria-hidden="true">
     <img src="<?= e(asset_url('img/recruiter-withdraw-decor-2.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
 </div>

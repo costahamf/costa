@@ -175,9 +175,14 @@ function ensure_database_schema($pdo)
         "ALTER TABLE users ADD COLUMN last_verification_sent_at DATETIME NULL",
         "ALTER TABLE users ADD COLUMN balance_correction DECIMAL(12,2) NOT NULL DEFAULT 0",
         "ALTER TABLE city_rates ADD COLUMN max_earnings_per_courier INT NULL DEFAULT NULL",
-        "ALTER TABLE news ADD COLUMN image_path VARCHAR(255) NULL DEFAULT NULL"
+        "ALTER TABLE city_rates ADD COLUMN reward_auto INT UNSIGNED NOT NULL DEFAULT 0",
+        "ALTER TABLE city_rates ADD COLUMN reward_foot INT UNSIGNED NOT NULL DEFAULT 0",
+        "ALTER TABLE news ADD COLUMN image_path VARCHAR(255) NULL DEFAULT NULL",
+        "ALTER TABLE notifications ADD COLUMN image_path VARCHAR(255) NULL DEFAULT NULL"
     );
     foreach ($queries as $sql) { try { $pdo->exec($sql); } catch (Exception $e) { } }
+    try { $pdo->exec("UPDATE city_rates SET reward_auto = reward_per_order WHERE reward_auto = 0 AND reward_per_order > 0"); } catch (Exception $e) { }
+    try { $pdo->exec("UPDATE city_rates SET reward_foot = reward_per_order WHERE reward_foot = 0 AND reward_per_order > 0"); } catch (Exception $e) { }
     $pdo->exec("CREATE TABLE IF NOT EXISTS password_resets (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, email VARCHAR(190) NOT NULL, token VARCHAR(6) NOT NULL, expires_at DATETIME NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX idx_password_resets_email (email), INDEX idx_password_resets_token (token)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     $pdo->exec("CREATE TABLE IF NOT EXISTS login_attempts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, email VARCHAR(190) NOT NULL, ip_address VARCHAR(64) NOT NULL, attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, success TINYINT(1) NOT NULL DEFAULT 0, INDEX idx_login_attempts_lookup (email, ip_address, attempted_at)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     $pdo->exec("CREATE TABLE IF NOT EXISTS balance_history (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, recruiter_id INT UNSIGNED NOT NULL, admin_id INT UNSIGNED NULL, amount DECIMAL(12,2) NOT NULL, comment VARCHAR(255) NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX idx_balance_history_recruiter (recruiter_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
@@ -335,7 +340,8 @@ function courier_reward_total($pdo, $courier)
 {
     $global = (float) get_setting($pdo, 'reward_per_order', '30');
     $rateRow = get_city_rate_row($pdo, $courier['city']);
-    $rate = $rateRow ? (float) $rateRow['reward_per_order'] : $global;
+    $deliveryType = isset($courier['delivery_type']) ? $courier['delivery_type'] : 'foot';
+    $rate = $rateRow ? city_rate_value($rateRow, $deliveryType, $global) : $global;
     $total = (int) $courier['orders_count'] * $rate;
     if ($rateRow && $rateRow['max_earnings_per_courier'] !== null && $rateRow['max_earnings_per_courier'] !== '') {
         $max = (float) $rateRow['max_earnings_per_courier'];
@@ -392,16 +398,16 @@ function mark_notifications_read($pdo, $recruiterId)
     $stmt->execute(array($recruiterId));
 }
 
-function create_notification($pdo, $recruiterId, $title, $message)
+function create_notification($pdo, $recruiterId, $title, $message, $imagePath = null)
 {
-    $stmt = $pdo->prepare('INSERT INTO notifications (recruiter_id, title, message) VALUES (?, ?, ?)');
-    $stmt->execute(array($recruiterId, $title, $message));
+    $stmt = $pdo->prepare('INSERT INTO notifications (recruiter_id, title, message, image_path) VALUES (?, ?, ?, ?)');
+    $stmt->execute(array($recruiterId, $title, $message, $imagePath));
 }
 
-function create_news_notification($pdo, $title, $message)
+function create_news_notification($pdo, $title, $message, $imagePath = null)
 {
     $stmt = $pdo->query("SELECT id FROM users WHERE role = 'recruiter'");
-    foreach ($stmt->fetchAll() as $row) { create_notification($pdo, (int) $row['id'], $title, $message); }
+    foreach ($stmt->fetchAll() as $row) { create_notification($pdo, (int) $row['id'], $title, $message, $imagePath); }
 }
 
 function get_cities($pdo)
@@ -422,18 +428,22 @@ function handle_news_image_upload($field)
     if (!$info) { throw new RuntimeException('Файл не является изображением.'); }
     $mime = $info['mime'];
     if (!is_dir(NEWS_UPLOADS_PATH)) { mkdir(NEWS_UPLOADS_PATH, 0775, true); }
-    $name = 'news-' . date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.webp';
-    $dest = NEWS_UPLOADS_PATH . '/' . $name;
-    if ($mime === 'image/webp') {
-        move_uploaded_file($file['tmp_name'], $dest);
-    } else {
-        if (!function_exists('imagewebp')) { throw new RuntimeException('На сервере нет GD/WebP для конвертации.'); }
+    $ext = $mime === 'image/webp' ? 'webp' : ($mime === 'image/jpeg' ? 'jpg' : ($mime === 'image/png' ? 'png' : ''));
+    if ($ext === '') { throw new RuntimeException('Допустимы WebP, JPG или PNG.'); }
+    $base = 'news-' . date('YmdHis') . '-' . bin2hex(random_bytes(6));
+    if ($mime !== 'image/webp' && function_exists('imagewebp')) {
+        $name = $base . '.webp';
+        $dest = NEWS_UPLOADS_PATH . '/' . $name;
         if ($mime === 'image/jpeg') { $img = imagecreatefromjpeg($file['tmp_name']); }
-        elseif ($mime === 'image/png') { $img = imagecreatefrompng($file['tmp_name']); imagepalettetotruecolor($img); imagealphablending($img, true); imagesavealpha($img, true); }
-        else { throw new RuntimeException('Допустимы WebP, JPG или PNG с конвертацией в WebP.'); }
+        else { $img = imagecreatefrompng($file['tmp_name']); imagepalettetotruecolor($img); imagealphablending($img, true); imagesavealpha($img, true); }
         imagewebp($img, $dest, 85);
         imagedestroy($img);
+    } else {
+        $name = $base . '.' . $ext;
+        $dest = NEWS_UPLOADS_PATH . '/' . $name;
+        move_uploaded_file($file['tmp_name'], $dest);
     }
+    @chmod($dest, 0644);
     return 'news/' . $name;
 }
 
@@ -455,11 +465,20 @@ function chart_series_last_30_days($pdo)
     return array('labels' => $labels, 'recruiters' => $recruiters, 'couriers' => $couriers, 'rewards' => $rewards);
 }
 
-function reward_for_courier($pdo, $recruiterId, $city)
+function city_rate_value($rateRow, $deliveryType, $fallback)
+{
+    if (!$rateRow) { return (float) $fallback; }
+    $legacy = isset($rateRow['reward_per_order']) ? (float) $rateRow['reward_per_order'] : (float) $fallback;
+    $column = $deliveryType === 'auto' ? 'reward_auto' : 'reward_foot';
+    if (isset($rateRow[$column]) && (float) $rateRow[$column] > 0) { return (float) $rateRow[$column]; }
+    return $legacy > 0 ? $legacy : (float) $fallback;
+}
+
+function reward_for_courier($pdo, $recruiterId, $city, $deliveryType = 'foot')
 {
     $global = (float) get_setting($pdo, 'reward_per_order', '30');
     $rateRow = get_city_rate_row($pdo, $city);
-    return $rateRow ? (float) $rateRow['reward_per_order'] : $global;
+    return $rateRow ? city_rate_value($rateRow, $deliveryType, $global) : $global;
 }
 
 function get_recruiter_stats($pdo, $recruiterId)

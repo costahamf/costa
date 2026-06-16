@@ -15,9 +15,6 @@ require __DIR__ . '/../includes/header.php'; require __DIR__ . '/../includes/rec
 <div class="recruiter-decor-1 recruiter-dashboard-decor-1" aria-hidden="true">
     <img src="<?= e(asset_url('img/recruiter-dashboard-decor-1.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
 </div>
-<div class="recruiter-decor-2 recruiter-dashboard-decor-2" aria-hidden="true">
-    <img src="<?= e(asset_url('img/recruiter-dashboard-decor-2.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
-</div>
 
 <section class="referral-box"><div><h2>Персональная ссылка</h2><p>Кандидаты по этой ссылке автоматически привяжутся к вашему кабинету.</p></div><div class="copy-row"><input id="referralLink" type="text" readonly value="<?= e($referralLink) ?>"><button class="button" type="button" data-copy-target="referralLink"><i class="fa-regular fa-copy"></i> Скопировать</button></div></section>
 <div class="dashboard-actions"><a class="button" href="add-courier.php"><i class="fa-solid fa-plus"></i> Добавить курьера</a></div>
