@@ -413,13 +413,6 @@ TXT
 )
 );
 ?>
-<!-- Decorative 3D images -->
-<div class="recruiter-decor-1 recruiter-faq-decor-1" aria-hidden="true">
-    <img src="<?= e(asset_url('img/recruiter-faq-decor-1.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
-</div>
-<div class="recruiter-decor-2 recruiter-faq-decor-2" aria-hidden="true">
-    <img src="<?= e(asset_url('img/recruiter-faq-decor-2.webp')) ?>" alt="" loading="lazy" onerror="this.style.display='none'">
-</div>
 
 <section class="panel faq-page"><div class="panel-heading"><h2>База знаний рекрутера</h2></div><div class="panel-body faq-accordion">
 <?php foreach ($faq as $section => $items): ?><details class="faq-section" open><summary><?= e($section) ?></summary><?php foreach ($items as $title => $text): ?><details class="faq-item"><summary><?= e($title === '' ? $section : $title) ?></summary><div class="faq-answer"><p><?= nl2br(e($text)) ?></p></div></details><?php endforeach; ?></details><?php endforeach; ?>

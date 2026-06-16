@@ -112,36 +112,25 @@ return array(
 
 | Страница | Файл 1 | Файл 2 |
 |----------|--------|--------|
-| dashboard.php | `recruiter-dashboard-decor-1.webp` (280×280) | `recruiter-dashboard-decor-2.webp` (220×220) |
-| city-rates.php | `recruiter-cityrates-decor-1.webp` (260×260) | `recruiter-cityrates-decor-2.webp` (200×200) |
-| faq.php | `recruiter-faq-decor-1.webp` (240×240) | `recruiter-faq-decor-2.webp` (180×180) |
-| withdraw.php | `recruiter-withdraw-decor-1.webp` (260×260) | `recruiter-withdraw-decor-2.webp` (200×200) |
+| dashboard.php | `recruiter-dashboard-decor-1.webp` (280×280) |  |
+| city-rates.php |  | `recruiter-cityrates-decor-2.webp` (200×200) |
+| faq.php |  |  |
+| withdraw.php |  | `recruiter-withdraw-decor-2.webp` (200×200) |
 
 **Промпты для рекрутера (пример для dashboard, остальные аналогично):**
 - `recruiter-dashboard-decor-1.webp` — `3D clay isometric abstract shape, soft pastel yellow cream, rounded cube, transparent background, soft shadows, 280x280, webp`
-- `recruiter-dashboard-decor-2.webp` — `3D clay isometric delivery bag with check mark, pastel tones, soft lighting, transparent background, 220x220, webp`
 
 ### Страницы админки (admin/)
 
 | Страница (tab) | Файл 1 | Файл 2 |
 |----------------|--------|--------|
-| stats | `admin-stats-decor-1.webp` (280×280) | `admin-stats-decor-2.webp` (220×220) |
-| verification | `admin-verification-decor-1.webp` (260×260) | `admin-verification-decor-2.webp` (200×200) |
-| recruiters | `admin-recruiters-decor-1.webp` (260×260) | `admin-recruiters-decor-2.webp` (200×200) |
-| couriers | `admin-couriers-decor-1.webp` (260×260) | `admin-couriers-decor-2.webp` (200×200) |
-| city-rates | `admin-cityrates-decor-1.webp` (260×260) | `admin-cityrates-decor-2.webp` (200×200) |
-| news | `admin-news-decor-1.webp` (260×260) | `admin-news-decor-2.webp` (200×200) |
-| settings | `admin-settings-decor-1.webp` (260×260) | `admin-settings-decor-2.webp` (200×200) |
 
 **Промпты для админки (пример для stats):**
-- `admin-stats-decor-1.webp` — `3D clay isometric analytics chart bars, pastel yellow dark palette, premium style, transparent background, 280x280, webp`
-- `admin-stats-decor-2.webp` — `3D clay isometric shield with check, verification theme, pastel tones, transparent background, 220x220, webp`
 
 ### Логотип
 
 | Файл | Описание | Размер | Промпт |
 |------|----------|--------|--------|
-| `logo-partner.webp` | Логотип «Я партнер» в стиле 3D clay, буквы объёмные, пастельные тона | 150×50 px | `3D текст "Я партнер", мягкие пастельные тона, глиняная текстура, объёмные буквы, прозрачный фон, 150x50, webp` |
 
 ### Иконки меню (существующие, в assets/icons/)
 

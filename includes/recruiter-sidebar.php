@@ -40,6 +40,7 @@ $supportUrl = get_setting($pdo, 'support_bot_url', 'https://t.me/ваш_бот')
             <?php foreach ($notifications as $note): ?>
                 <article class="<?= $note['is_read'] ? '' : 'unread' ?>">
                     <h4><?= e($note['title']) ?></h4>
+                    <?php if (!empty($note['image_path'])): ?><img class="notification-news-image" src="<?= e(upload_url($note['image_path'])) ?>" alt="" loading="lazy"><?php endif; ?>
                     <p><?= e($note['message']) ?></p>
                     <time><?= e(date('d.m.Y H:i', strtotime($note['created_at']))) ?></time>
                 </article>
